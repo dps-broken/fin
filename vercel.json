@@ -1,0 +1,53 @@
+
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server/server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "server/config/**",
+          "server/controllers/**",
+          "server/middleware/**",
+          "server/models/**",
+          "server/routes/**",
+          "server/services/**",
+          "server/templates/**",
+          "server/utils/**"
+        ]
+      }
+    },
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+   
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/server.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "client/build/index.html"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/crons/run-daily-report",
+      "schedule": "0 21 * * *"
+    },
+    {
+      "path": "/api/crons/run-monthly-report",
+      "schedule": "0 9 1 * *"
+    }
+  ]
+}
